@@ -14,7 +14,7 @@ import java.util.List;
 public class ImageDAO {
 
 	public void save(Image image) {
-		Connection connection = ConnectDB.getInstance().createConnection();
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		try {
 			File file = new File(image.getPath());
 			FileInputStream fis = new FileInputStream(file);
@@ -31,7 +31,7 @@ public class ImageDAO {
 	}
 
 	public List<Image> getAll() throws Exception {
-		Connection connection = ConnectDB.getInstance().createConnection();
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
 				.prepareStatement("SELECT name, image FROM images");
 		ResultSet rs = ps.executeQuery();
@@ -66,7 +66,7 @@ public class ImageDAO {
 	}
 
 	public void delete() throws Exception {
-		Connection connection = ConnectDB.getInstance().createConnection();
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
 				.prepareStatement("DELETE FROM images");
 		ps.executeUpdate();

@@ -11,7 +11,7 @@ public class ConectionTest {
 
 	@Test
 	public void conectionSuccessfull() {
-		Connection connection = ConnectDB.getInstance().createConnection();
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		Assert.assertNotNull(connection);
 	}
 
