@@ -33,7 +33,7 @@ public class DBSetup {
 		PreparedStatement ps;
 		try {
 			ps = connection
-					.prepareStatement("CREATE TABLE images (id name, image bytea)");
+					.prepareStatement("CREATE TABLE images (name text, image bytea)");
 			ps.executeUpdate();
 			ps.close();
 			System.out.println("Created table.");
