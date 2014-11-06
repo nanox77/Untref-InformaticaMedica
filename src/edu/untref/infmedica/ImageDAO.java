@@ -14,6 +14,7 @@ import java.util.List;
 public class ImageDAO {
 
 	public void save(Image image) {
+
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		try {
 			File file = new File(image.getPath());
@@ -31,6 +32,7 @@ public class ImageDAO {
 	}
 
 	public List<Image> getAll() throws Exception {
+
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
 				.prepareStatement("SELECT name, image FROM images");
@@ -51,6 +53,7 @@ public class ImageDAO {
 	}
 
 	private byte[] getArrayByteFromInputStream(InputStream is) {
+
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		int nRead;
 		byte[] data = new byte[16384];
@@ -66,10 +69,28 @@ public class ImageDAO {
 	}
 
 	public void delete() throws Exception {
+
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
 				.prepareStatement("DELETE FROM images");
 		ps.executeUpdate();
 		ps.close();
+	}
+
+	public Image getImage(String name) throws Exception {
+
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
+		PreparedStatement ps = connection
+				.prepareStatement("SELECT name, image FROM images WHERE name = ?");
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
+		Image image = new Image();
+		image.setName(rs.getString(1));
+		InputStream is = rs.getBinaryStream(2);
+		image.setImage(getArrayByteFromInputStream(is));
+		is.close();
+		rs.close();
+		ps.close();
+		return image;
 	}
 }
