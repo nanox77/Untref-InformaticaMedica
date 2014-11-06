@@ -1,0 +1,9 @@
+select sqlj.install_jar('file:///tmp/Untitled.jar', 'cp', true);
+
+create schema mydb;
+
+select sqlj.set_classpath('mydb', 'cp');
+
+CREATE FUNCTION mydb.compare(varchar,varchar) RETURNS varchar
+  AS 'edu.untref.infmedica.Comparator.compare'
+  LANGUAGE java;

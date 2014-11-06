@@ -12,8 +12,10 @@ public class ProcessorFilter implements PlugInFilter {
 
 	@Override
 	public void run(ImageProcessor ip) {
+
 		ImageProcessor imageDuplicated = ip.duplicate();
-		getHistogram(imageDuplicated);
+		System.out.println("Histograma: "
+				+ Arrays.toString(imageDuplicated.getHistogram()));
 		imageDuplicated.findEdges();
 		ImagePlus imgPlus = new ImagePlus(TITLE, imageDuplicated);
 		imgPlus.show();
@@ -21,12 +23,7 @@ public class ProcessorFilter implements PlugInFilter {
 
 	@Override
 	public int setup(String arg, ImagePlus imp) {
-		return DOES_ALL;
-	}
 
-	public int[] getHistogram(ImageProcessor ip) {
-		int[] histograma = ip.getHistogram();
-		System.out.println("Histograma: " + Arrays.toString(histograma));
-		return histograma;
+		return DOES_ALL;
 	}
 }

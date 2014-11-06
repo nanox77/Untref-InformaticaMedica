@@ -18,9 +18,8 @@ public class Comparator {
 			Opener opener = new Opener();
 			ImagePlus imgPlus1 = opener.deserialize(image1.getImage());
 			ImagePlus imgPlus2 = opener.deserialize(image2.getImage());
-			ProcessorFilter pf = new ProcessorFilter();
-			int[] histogram1 = pf.getHistogram(imgPlus1.getProcessor());
-			int[] histogram2 = pf.getHistogram(imgPlus2.getProcessor());
+			int[] histogram1 = imgPlus1.getProcessor().getHistogram();
+			int[] histogram2 = imgPlus2.getProcessor().getHistogram();
 			double distanciaEuclidea = distanciaEuclidea(histogram1, histogram2);
 			return String.valueOf(distanciaEuclidea);
 		} catch (Exception e) {
@@ -28,6 +27,20 @@ public class Comparator {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String compare2(String histogram1, String histogram2) {
+
+		String[] stringArray1 = histogram1.split(",");
+		String[] stringArray2 = histogram2.split(",");
+		// Cambiar length por constante.
+		int[] intArray1 = new int[histogram1.length()];
+		int[] intArray2 = new int[histogram2.length()];
+		for (int i = 0; i < intArray1.length; i++) {
+			intArray1[i] = Integer.parseInt(stringArray1[i]);
+			intArray2[i] = Integer.parseInt(stringArray2[i]);
+		}
+		return String.valueOf(distanciaEuclidea(intArray1, intArray2));
 	}
 
 	private static double distanciaEuclidea(int[] histogram1, int[] histogram2) {
