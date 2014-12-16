@@ -2,6 +2,8 @@ package edu.untref.infmedica;
 
 import ij.ImagePlus;
 import ij.io.Opener;
+import ij.plugin.FFT;
+import ij.process.FHT;
 import ij.process.ImageProcessor;
 
 public class ProcesadorDeImagenes {
@@ -19,7 +21,17 @@ public class ProcesadorDeImagenes {
 
 		this.ip.findEdges();
 	}
-
+	
+	public void blur(double sigma){
+		
+		this.ip.blurGaussian(sigma);
+	}
+	
+	public void gamma(double value){
+		
+		this.ip.gamma(value);
+	}
+	
 	public void cargarImagen(Image imagen) {
 
 		this.imagen = imagen;
