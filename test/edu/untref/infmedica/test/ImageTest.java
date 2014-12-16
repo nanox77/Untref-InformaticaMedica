@@ -11,22 +11,23 @@ import edu.untref.infmedica.ImageDAO;
 
 public class ImageTest {
 
+	private ImageDAO dao;
+
 	@Before
 	public void clearDB() throws Exception {
-		ImageDAO dao = new ImageDAO();
-		dao.delete();
+
+		this.dao = new ImageDAO();
+		this.dao.delete();
 	}
 
 	@Test
 	public void saveImage() throws Exception {
-		Image image = new Image();
-		image.setPath("resources/radiografia_mano.jpg");
-		image.setName("Radiografia de mano");
-		ImageDAO dao = new ImageDAO();
-		dao.save(image);
 
-		List<Image> images = dao.getAll();
-
+		String name = "Radiografía de mano";
+		String path = "resources/radiografia_mano.jpg";
+		Image image = new Image(name, path);
+		this.dao.save(image);
+		List<Image> images = this.dao.getAll();
 		Assert.assertEquals(1, images.size());
 	}
 }

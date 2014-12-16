@@ -1,8 +1,6 @@
 package edu.untref.infmedica;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,8 +16,6 @@ public class ImageDAO {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		try {
-			File file = new File(image.getPath());
-			FileInputStream fis = new FileInputStream(file);
 			String query = "INSERT INTO images VALUES (?, ?, 'histogram')";
 			String histogram = Arrays.toString(image.getHistogram());
 			histogram = histogram.replace('[', '{');
@@ -27,10 +23,9 @@ public class ImageDAO {
 			query = query.replace("histogram", histogram);
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, image.getName());
-			ps.setBinaryStream(2, fis, (int) file.length());
+			ps.setBytes(2, image.getBytes());
 			ps.executeUpdate();
 			ps.close();
-			fis.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,10 +40,11 @@ public class ImageDAO {
 		List<Image> images = new ArrayList<Image>();
 		Image image = null;
 		while (rs.next()) {
-			image = new Image();
-			image.setName(rs.getString(1));
+			String name = rs.getString(1);
 			InputStream is = rs.getBinaryStream(2);
-			image.setImage(getArrayByteFromInputStream(is));
+			byte[] bytes = getArrayByteFromInputStream(is);
+			image = new Image(name, null);
+			image.setBytes(bytes);
 			images.add(image);
 			is.close();
 		}
@@ -89,13 +85,13 @@ public class ImageDAO {
 				.prepareStatement("SELECT name, image FROM images WHERE name = ?");
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
-		Image image = new Image();
-		image.setName(rs.getString(1));
 		InputStream is = rs.getBinaryStream(2);
-		image.setImage(getArrayByteFromInputStream(is));
+		byte[] bytes = getArrayByteFromInputStream(is);
 		is.close();
 		rs.close();
 		ps.close();
+		Image image = new Image(name, null);
+		image.setBytes(bytes);
 		return image;
 	}
 }
