@@ -1,8 +1,5 @@
 package edu.untref.infmedica;
 
-import ij.ImagePlus;
-import ij.io.Opener;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,13 +20,12 @@ public class ImageDAO {
 		try {
 			File file = new File(image.getPath());
 			FileInputStream fis = new FileInputStream(file);
-			String query ="INSERT INTO images VALUES (?, ?, 'histogram')";
-			String histogram = Arrays.toString(getHistogram(image));
+			String query = "INSERT INTO images VALUES (?, ?, 'histogram')";
+			String histogram = Arrays.toString(image.getHistogram());
 			histogram = histogram.replace('[', '{');
 			histogram = histogram.replace(']', '}');
 			query = query.replace("histogram", histogram);
-			PreparedStatement ps = connection
-					.prepareStatement(query);
+			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, image.getName());
 			ps.setBinaryStream(2, fis, (int) file.length());
 			ps.executeUpdate();
@@ -38,13 +34,6 @@ public class ImageDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private int[] getHistogram(Image image) {
-
-		Opener opener = new Opener();
-		ImagePlus imgPlus = opener.openImage(image.getPath());
-		return imgPlus.getProcessor().getHistogram();
 	}
 
 	public List<Image> getAll() throws Exception {
