@@ -1,15 +1,14 @@
 package edu.untref.infmedica.test;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.untref.infmedica.Imagen;
 import edu.untref.infmedica.ImageDAO;
+import edu.untref.infmedica.Imagen;
 import edu.untref.infmedica.ProcesadorDeImagenes;
 
 public class ImageTest {
@@ -23,7 +22,7 @@ public class ImageTest {
 	public void clearDB() throws Exception {
 
 		this.dao = new ImageDAO();
-		this.dao.delete();
+		//this.dao.delete();
 		this.procesador = new ProcesadorDeImagenes();
 	}
 

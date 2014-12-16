@@ -3,9 +3,11 @@ package edu.untref.infmedica;
 import ij.ImagePlus;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -13,8 +15,7 @@ public class Imagen {
 
 	private String name;
 	private String path;
-	private Image image;
-	private byte[] bytes;
+	private BufferedImage image;
 
 	public Imagen(String name) throws IOException {
 
@@ -26,7 +27,6 @@ public class Imagen {
 		this.name = name;
 		this.path = path;
 		this.image = ImageIO.read(new File(path));
-		createBinary();
 	}
 
 	public String getName() {
@@ -34,9 +34,20 @@ public class Imagen {
 		return this.name;
 	}
 
-	public byte[] getBytes() {
+	public byte[] getBytes() throws IOException {
 
-		return this.bytes;
+		return extractBytes();
+	}
+
+	private byte[] extractBytes() throws IOException {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+		ImageIO.write(this.image, "jpg", baos);
+		baos.flush();
+		// String base64String = Base64.encodeBytes(baos.toByteArray());
+		byte[] bytes = baos.toByteArray();
+		baos.close();
+		return bytes;
 	}
 
 	public String getPath() {
@@ -50,18 +61,13 @@ public class Imagen {
 		return imagePlus.getProcessor().getHistogram();
 	}
 
-	private void createBinary() throws IOException {
+	public void setBytes(byte[] bytes) throws ClassNotFoundException,
+			IOException {
 
-		File file = new File(getPath());
-		this.bytes = Files.readAllBytes(file.toPath());
+		this.image = ImageIO.read(new ByteArrayInputStream(bytes));
 	}
 
-	public void setBytes(byte[] bytes) {
-
-		this.bytes = bytes;
-	}
-
-	public void setImage(Image image) {
+	public void setImage(BufferedImage image) {
 
 		this.image = image;
 	}

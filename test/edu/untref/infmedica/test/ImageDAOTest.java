@@ -15,9 +15,12 @@ public class ImageDAOTest {
 	public void getImageFromDB() throws Exception {
 
 		ImageDAO dao = new ImageDAO();
-		Imagen imagen = dao.getImage("Radiografía de mano");
+		Imagen imagen = new Imagen("imagen", "resources/radiografia_mano.jpg");
+		dao.delete();
+		dao.save(imagen);
+		Imagen imagenRecuperada = dao.getImage("imagen");
 		ProcesadorDeImagenes procesador = new ProcesadorDeImagenes();
-		procesador.cargarImagen(imagen);
+		procesador.cargarImagen(imagenRecuperada);
 		procesador.mostrarImagen("Imagen de la BD");
 	}
 }

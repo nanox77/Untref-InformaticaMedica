@@ -84,6 +84,7 @@ public class ImageDAO {
 				.prepareStatement("SELECT name, image FROM images WHERE name = ?");
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
+		rs.next();
 		InputStream is = rs.getBinaryStream(2);
 		byte[] bytes = getArrayByteFromInputStream(is);
 		is.close();
