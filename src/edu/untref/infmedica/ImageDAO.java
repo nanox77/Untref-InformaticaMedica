@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ImageDAO {
 
-	public void save(Image image) {
+	public void save(Imagen image) {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		try {
@@ -31,19 +31,18 @@ public class ImageDAO {
 		}
 	}
 
-	public List<Image> getAll() throws Exception {
+	public List<Imagen> getAll() throws Exception {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
 				.prepareStatement("SELECT name, image FROM images");
 		ResultSet rs = ps.executeQuery();
-		List<Image> images = new ArrayList<Image>();
-		Image image = null;
+		List<Imagen> images = new ArrayList<Imagen>();
 		while (rs.next()) {
 			String name = rs.getString(1);
 			InputStream is = rs.getBinaryStream(2);
 			byte[] bytes = getArrayByteFromInputStream(is);
-			image = new Image(name, null);
+			Imagen image = new Imagen(name);
 			image.setBytes(bytes);
 			images.add(image);
 			is.close();
@@ -78,7 +77,7 @@ public class ImageDAO {
 		ps.close();
 	}
 
-	public Image getImage(String name) throws Exception {
+	public Imagen getImage(String name) throws Exception {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
@@ -90,7 +89,7 @@ public class ImageDAO {
 		is.close();
 		rs.close();
 		ps.close();
-		Image image = new Image(name, null);
+		Imagen image = new Imagen(name);
 		image.setBytes(bytes);
 		return image;
 	}

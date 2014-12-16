@@ -2,13 +2,13 @@ package edu.untref.infmedica;
 
 import ij.ImagePlus;
 import ij.io.Opener;
-import ij.plugin.FFT;
-import ij.process.FHT;
 import ij.process.ImageProcessor;
+
+import java.awt.Image;
 
 public class ProcesadorDeImagenes {
 
-	private Image imagen;
+	private Imagen imagen;
 	private ImageProcessor ip;
 
 	public void mostrarImagen(String titulo) {
@@ -20,24 +20,25 @@ public class ProcesadorDeImagenes {
 	public void findEdges() {
 
 		this.ip.findEdges();
+		this.imagen.setImage(ip.getBufferedImage());
 	}
-	
-	public void blur(double sigma){
-		
+
+	public void blur(double sigma) {
+
 		this.ip.blurGaussian(sigma);
+		this.imagen.setImage(ip.getBufferedImage());
 	}
-	
-	public void gamma(double value){
-		
+
+	public void gamma(double value) {
+
 		this.ip.gamma(value);
+		this.imagen.setImage(ip.getBufferedImage());
 	}
-	
-	public void cargarImagen(Image imagen) {
+
+	public void cargarImagen(Imagen imagen) {
 
 		this.imagen = imagen;
-		Opener opener = new Opener();
-		ImagePlus imagePlus = opener.openImage(imagen.getPath());
+		ImagePlus imagePlus = new ImagePlus(imagen.getName(), imagen.getImage());
 		this.ip = imagePlus.getProcessor();
 	}
-	
 }
