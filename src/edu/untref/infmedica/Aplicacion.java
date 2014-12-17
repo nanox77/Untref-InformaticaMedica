@@ -29,6 +29,8 @@ public class Aplicacion implements ActionListener {
 	private JList<Imagen> listImagenes;
 	private JButton btnMostrarImagen;
 	private ProcesadorDeImagenes procesador;
+	private JComboBox<String> comboBox;
+	private JButton btnFiltro;
 
 	public static void main(String[] args) throws Exception {
 
@@ -37,7 +39,7 @@ public class Aplicacion implements ActionListener {
 
 	public Aplicacion() throws Exception {
 
-		procesador = new ProcesadorDeImagenes();
+		this.procesador = new ProcesadorDeImagenes();
 		crearVentana();
 	}
 
@@ -51,15 +53,17 @@ public class Aplicacion implements ActionListener {
 		crearPanel();
 		configurarAcciones();
 		populatePacientes();
+		populateCombo();
 		this.ventana.setVisible(true);
 	}
 
 	private void configurarAcciones() {
 
 		this.btnMostrarImagen.addActionListener(this);
-		btnMostrarImagen.setActionCommand("MOSTRAR_IMAGEN");
-		this.listImagenes
-		.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.btnFiltro.addActionListener(this);
+		this.btnMostrarImagen.setActionCommand("MOSTRAR_IMAGEN");
+		this.btnFiltro.setActionCommand("FILTRO");
+		this.listImagenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.listPacientes
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.listPacientes
@@ -168,27 +172,27 @@ public class Aplicacion implements ActionListener {
 		gbc_textArea.gridx = 1;
 		gbc_textArea.gridy = 5;
 		this.contentPane.add(textArea, gbc_textArea);
-		btnMostrarImagen = new JButton("Mostrar imagen");
+		this.btnMostrarImagen = new JButton("Mostrar imagen");
 		GridBagConstraints gbc_btnMostrarImagen = new GridBagConstraints();
 		gbc_btnMostrarImagen.fill = GridBagConstraints.BOTH;
 		gbc_btnMostrarImagen.insets = new Insets(5, 5, 5, 5);
 		gbc_btnMostrarImagen.gridx = 3;
 		gbc_btnMostrarImagen.gridy = 7;
-		this.contentPane.add(btnMostrarImagen, gbc_btnMostrarImagen);
-		JComboBox comboBox = new JComboBox();
+		this.contentPane.add(this.btnMostrarImagen, gbc_btnMostrarImagen);
+		this.comboBox = new JComboBox<String>();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.fill = GridBagConstraints.BOTH;
 		gbc_comboBox.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox.gridx = 3;
 		gbc_comboBox.gridy = 8;
-		this.contentPane.add(comboBox, gbc_comboBox);
-		JButton btnNewButton_1 = new JButton("Aplicar filtro");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.fill = GridBagConstraints.BOTH;
-		gbc_btnNewButton_1.insets = new Insets(5, 5, 5, 5);
-		gbc_btnNewButton_1.gridx = 3;
-		gbc_btnNewButton_1.gridy = 9;
-		this.contentPane.add(btnNewButton_1, gbc_btnNewButton_1);
+		this.contentPane.add(this.comboBox, gbc_comboBox);
+		this.btnFiltro = new JButton("Aplicar filtro");
+		GridBagConstraints gbc_btnFiltro = new GridBagConstraints();
+		gbc_btnFiltro.fill = GridBagConstraints.BOTH;
+		gbc_btnFiltro.insets = new Insets(5, 5, 5, 5);
+		gbc_btnFiltro.gridx = 3;
+		gbc_btnFiltro.gridy = 9;
+		this.contentPane.add(this.btnFiltro, gbc_btnFiltro);
 	}
 
 	private void populatePacientes() throws Exception {
@@ -241,13 +245,37 @@ public class Aplicacion implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		Imagen imagen;
 		String name = e.getActionCommand();
 		switch (name) {
 		case "MOSTRAR_IMAGEN":
-			Imagen imagen = listImagenes.getSelectedValue();
-			procesador.cargarImagen(imagen);
-			procesador.mostrarImagen(imagen.getName());
+			imagen = this.listImagenes.getSelectedValue();
+			this.procesador.cargarImagen(imagen);
+			this.procesador.mostrarImagen(imagen.getName());
 			break;
-		}		
+		case "FILTRO":
+			imagen = this.listImagenes.getSelectedValue();
+			this.procesador.cargarImagen(imagen);
+			switch ((String) comboBox.getSelectedItem()){
+			case "FindEdges":
+				this.procesador.findEdges();
+				break;
+			case "Blur":
+				this.procesador.blur(10);
+				break;
+			case "Gamma":
+				this.procesador.gamma(0.25);
+				break;
+			}
+			//this.procesador.mostrarImagen(imagen.getName());
+			break;
+		}
+	}
+
+	private void populateCombo() {
+
+		this.comboBox.addItem("FindEdges");
+		this.comboBox.addItem("Blur");
+		this.comboBox.addItem("Gamma");
 	}
 }
