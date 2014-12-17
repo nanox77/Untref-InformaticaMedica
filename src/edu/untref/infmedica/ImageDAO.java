@@ -16,14 +16,15 @@ public class ImageDAO {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		try {
-			String query = "INSERT INTO images VALUES (?, ?, 'histogram')";
+			String query = "INSERT INTO images VALUES (?, ?, ?, 'histogram')";
 			String histogram = Arrays.toString(image.getHistogram());
 			histogram = histogram.replace('[', '{');
 			histogram = histogram.replace(']', '}');
 			query = query.replace("histogram", histogram);
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setString(1, image.getName());
-			ps.setBytes(2, image.getBytes());
+			ps.setInt(1, image.getPaciente());
+			ps.setString(2, image.getName());
+			ps.setBytes(3, image.getBytes());
 			ps.executeUpdate();
 			ps.close();
 		} catch (Exception e) {
@@ -35,14 +36,16 @@ public class ImageDAO {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
 		PreparedStatement ps = connection
-				.prepareStatement("SELECT name, image FROM images");
+				.prepareStatement("SELECT paciente, name, image FROM images");
 		ResultSet rs = ps.executeQuery();
 		List<Imagen> images = new ArrayList<Imagen>();
 		while (rs.next()) {
-			String name = rs.getString(1);
-			InputStream is = rs.getBinaryStream(2);
+			int paciente = rs.getInt(1);
+			String name = rs.getString(2);
+			InputStream is = rs.getBinaryStream(3);
 			byte[] bytes = getArrayByteFromInputStream(is);
 			Imagen image = new Imagen(name);
+			image.setPaciente(paciente);
 			image.setBytes(bytes);
 			images.add(image);
 			is.close();
@@ -51,7 +54,7 @@ public class ImageDAO {
 		ps.close();
 		return images;
 	}
-	
+
 	public List<Imagen> getAll(Paciente paciente) throws Exception {
 
 		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();

@@ -51,6 +51,8 @@ public class Aplicacion {
 
 	private void configurarAcciones() {
 
+		this.listImagenes
+		.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.listPacientes
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.listPacientes

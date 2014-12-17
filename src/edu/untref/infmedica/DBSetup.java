@@ -1,5 +1,6 @@
 package edu.untref.infmedica;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -8,12 +9,29 @@ import java.util.List;
 
 public class DBSetup {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		DBSetup.createDatabase();
 		DBSetup.createTableImages();
 		DBSetup.createTablePacientes();
 		DBSetup.populateTablePacientes();
+		DBSetup.populateTableImagenes();
+	}
+
+	private static void populateTableImagenes() throws IOException {
+
+		List<Imagen> imagenes = new ArrayList<Imagen>();
+		Imagen imagen1 = new Imagen("craneo", "resources/craneo.jpg");
+		Imagen imagen2 = new Imagen("dental", "resources/dental.png");
+		Imagen imagen3 = new Imagen("f1", "resources/f1.jpg");
+		imagenes.add(imagen1);
+		imagenes.add(imagen2);
+		imagenes.add(imagen3);
+		ImageDAO dao = new ImageDAO();
+		for (Imagen imagen : imagenes) {
+			dao.save(imagen);
+			System.out.println("Added image " + imagen.getName());
+		}
 	}
 
 	private static void createDatabase() {

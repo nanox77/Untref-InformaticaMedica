@@ -16,6 +16,7 @@ public class Imagen {
 	private String name;
 	private String path;
 	private BufferedImage image;
+	private int paciente;
 
 	public Imagen(String name) throws IOException {
 
@@ -75,5 +76,15 @@ public class Imagen {
 	public Image getImage() {
 
 		return this.image;
+	}
+
+	public int getPaciente() {
+
+		return this.paciente;
+	}
+
+	public void setPaciente(int paciente) {
+
+		this.paciente = paciente;
 	}
 }
