@@ -16,6 +16,7 @@ public class DBSetup {
 		DBSetup.createTablePacientes();
 		DBSetup.populateTablePacientes();
 		DBSetup.populateTableImagenes();
+		System.out.println("LISTO.");
 	}
 
 	private static void populateTableImagenes() throws IOException {
@@ -23,6 +24,7 @@ public class DBSetup {
 		List<Imagen> imagenes = new ArrayList<Imagen>();
 		Imagen imagen1 = new Imagen("craneo", "resources/craneo.jpg");
 		Imagen imagen2 = new Imagen("dental", "resources/dental.png");
+		Imagen imagen2b = new Imagen("dentalCarie", "resources/dentalCarie.png");
 		Imagen imagen3 = new Imagen("f1", "resources/f1.jpg");
 		Imagen imagen4 = new Imagen("f2", "resources/f2.jpg");
 		Imagen imagen5 = new Imagen("hombro", "resources/hombro.jpg");
@@ -33,6 +35,7 @@ public class DBSetup {
 
 		imagen1.setPaciente(0);
 		imagen2.setPaciente(0);
+		imagen2b.setPaciente(0);
 		imagen3.setPaciente(0);
 		imagen4.setPaciente(1);
 		imagen5.setPaciente(1);
@@ -43,6 +46,7 @@ public class DBSetup {
 		
 		imagenes.add(imagen1);
 		imagenes.add(imagen2);
+		imagenes.add(imagen2b);
 		imagenes.add(imagen3);
 		imagenes.add(imagen4);
 		imagenes.add(imagen5);
@@ -68,7 +72,6 @@ public class DBSetup {
 			ps.close();
 			System.out.println("Created DB.");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -84,7 +87,6 @@ public class DBSetup {
 			ps.close();
 			System.out.println("Created table.");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -100,7 +102,6 @@ public class DBSetup {
 			ps.close();
 			System.out.println("Created table.");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
