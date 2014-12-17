@@ -1,10 +1,7 @@
 package edu.untref.infmedica;
 
 import ij.ImagePlus;
-import ij.io.Opener;
 import ij.process.ImageProcessor;
-
-import java.awt.Image;
 
 public class ProcesadorDeImagenes {
 

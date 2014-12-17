@@ -3,7 +3,9 @@ package edu.untref.infmedica;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -16,18 +18,19 @@ public class Aplicacion {
 
 	private JFrame ventana;
 	private JPanel contentPane;
+	private JList<Paciente> listPacientes;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		Aplicacion aplicacion = new Aplicacion();
 	}
 
-	public Aplicacion() {
+	public Aplicacion() throws Exception {
 
 		crearVentana();
 	}
 
-	private void crearVentana() {
+	private void crearVentana() throws Exception {
 
 		this.ventana = new JFrame();
 		this.ventana.setSize(800, 600);
@@ -35,6 +38,7 @@ public class Aplicacion {
 		this.contentPane = new JPanel();
 		this.ventana.setContentPane(this.contentPane);
 		crearPanel();
+		populatePacientes();
 		this.ventana.setVisible(true);
 	}
 
@@ -110,14 +114,14 @@ public class Aplicacion {
 		gbc_lblHistoriaClniica.gridx = 1;
 		gbc_lblHistoriaClniica.gridy = 4;
 		this.contentPane.add(lblHistoriaClniica, gbc_lblHistoriaClniica);
-		JList list = new JList();
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.gridheight = 10;
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.insets = new Insets(5, 5, 5, 5);
-		gbc_list.gridx = 0;
-		gbc_list.gridy = 0;
-		this.contentPane.add(list, gbc_list);
+		this.listPacientes = new JList<Paciente>();
+		GridBagConstraints gbc_listPacientes = new GridBagConstraints();
+		gbc_listPacientes.gridheight = 10;
+		gbc_listPacientes.fill = GridBagConstraints.BOTH;
+		gbc_listPacientes.insets = new Insets(5, 5, 5, 5);
+		gbc_listPacientes.gridx = 0;
+		gbc_listPacientes.gridy = 0;
+		this.contentPane.add(this.listPacientes, gbc_listPacientes);
 		JTextArea textArea = new JTextArea();
 		GridBagConstraints gbc_textArea = new GridBagConstraints();
 		gbc_textArea.gridwidth = 2;
@@ -147,5 +151,17 @@ public class Aplicacion {
 		gbc_btnNewButton_1.gridx = 3;
 		gbc_btnNewButton_1.gridy = 9;
 		this.contentPane.add(btnNewButton_1, gbc_btnNewButton_1);
+	}
+
+	private void populatePacientes() throws Exception {
+
+		PacienteDAO dao = new PacienteDAO();
+		List<Paciente> pacientes = dao.getAll();
+		pacientes.add(new Paciente(1, "hola", "hola"));
+		DefaultListModel<Paciente> model = new DefaultListModel<Paciente>();
+		for (Paciente paciente : pacientes) {
+			model.addElement(paciente);
+		}
+		listPacientes.setModel(model);
 	}
 }
