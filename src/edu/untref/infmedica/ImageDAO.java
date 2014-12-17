@@ -51,6 +51,28 @@ public class ImageDAO {
 		ps.close();
 		return images;
 	}
+	
+	public List<Imagen> getAll(Paciente paciente) throws Exception {
+
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
+		PreparedStatement ps = connection
+				.prepareStatement("SELECT name, image FROM images WHERE paciente = ?");
+		ps.setInt(1, paciente.getId());
+		ResultSet rs = ps.executeQuery();
+		List<Imagen> images = new ArrayList<Imagen>();
+		while (rs.next()) {
+			String name = rs.getString(1);
+			InputStream is = rs.getBinaryStream(2);
+			byte[] bytes = getArrayByteFromInputStream(is);
+			Imagen image = new Imagen(name);
+			image.setBytes(bytes);
+			images.add(image);
+			is.close();
+		}
+		rs.close();
+		ps.close();
+		return images;
+	}
 
 	private byte[] getArrayByteFromInputStream(InputStream is) {
 

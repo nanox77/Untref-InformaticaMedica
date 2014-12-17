@@ -15,12 +15,16 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Aplicacion {
 
 	private JFrame ventana;
 	private JPanel contentPane;
 	private JList<Paciente> listPacientes;
+	private JList<Imagen> listImagenes;
 
 	public static void main(String[] args) throws Exception {
 
@@ -40,8 +44,31 @@ public class Aplicacion {
 		this.contentPane = new JPanel();
 		this.ventana.setContentPane(this.contentPane);
 		crearPanel();
+		configurarAcciones();
 		populatePacientes();
 		this.ventana.setVisible(true);
+	}
+
+	private void configurarAcciones() {
+
+		this.listPacientes
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.listPacientes
+				.addListSelectionListener(new ListSelectionListener() {
+
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+
+						if (e.getValueIsAdjusting()) {
+							try {
+								populateImagenes();
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					}
+				});
 	}
 
 	private void crearPanel() {
@@ -87,14 +114,14 @@ public class Aplicacion {
 		gbc_lblNewLabel_6.gridx = 2;
 		gbc_lblNewLabel_6.gridy = 1;
 		this.contentPane.add(lblNewLabel_6, gbc_lblNewLabel_6);
-		JList list_1 = new JList();
-		GridBagConstraints gbc_list_1 = new GridBagConstraints();
-		gbc_list_1.fill = GridBagConstraints.BOTH;
-		gbc_list_1.insets = new Insets(5, 5, 5, 5);
-		gbc_list_1.gridheight = 6;
-		gbc_list_1.gridx = 3;
-		gbc_list_1.gridy = 1;
-		this.contentPane.add(list_1, gbc_list_1);
+		this.listImagenes = new JList();
+		GridBagConstraints gbc_listImagenes = new GridBagConstraints();
+		gbc_listImagenes.fill = GridBagConstraints.BOTH;
+		gbc_listImagenes.insets = new Insets(5, 5, 5, 5);
+		gbc_listImagenes.gridheight = 6;
+		gbc_listImagenes.gridx = 3;
+		gbc_listImagenes.gridy = 1;
+		this.contentPane.add(this.listImagenes, gbc_listImagenes);
 		JLabel lblNewLabel_2 = new JLabel("Nombre:");
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
 		gbc_lblNewLabel_2.anchor = GridBagConstraints.EAST;
@@ -160,16 +187,30 @@ public class Aplicacion {
 		PacienteDAO dao = new PacienteDAO();
 		List<Paciente> pacientes = dao.getAll();
 		DefaultListModel<Paciente> model = new DefaultListModel<Paciente>();
-		listPacientes.setModel(model);
-		listPacientes.setCellRenderer(new listCellRenderer());
+		this.listPacientes.setModel(model);
+		this.listPacientes.setCellRenderer(new listCellRenderer());
 		for (Paciente paciente : pacientes) {
 			model.addElement(paciente);
+		}
+	}
+
+	private void populateImagenes() throws Exception {
+
+		ImageDAO dao = new ImageDAO();
+		List<Imagen> imagenes = dao.getAll(this.listPacientes
+				.getSelectedValue());
+		DefaultListModel<Imagen> model = new DefaultListModel<Imagen>();
+		this.listImagenes.setModel(model);
+		this.listImagenes.setCellRenderer(new listCellRenderer());
+		for (Imagen imagen : imagenes) {
+			model.addElement(imagen);
 		}
 	}
 
 	@SuppressWarnings("serial")
 	public class listCellRenderer extends DefaultListCellRenderer {
 
+		@Override
 		public Component getListCellRendererComponent(JList<?> list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
@@ -179,6 +220,10 @@ public class Aplicacion {
 			if (value instanceof Paciente) {
 				Paciente paciente = (Paciente) value;
 				setText(paciente.getApellido() + ", " + paciente.getNombre());
+			}
+			if (value instanceof Imagen) {
+				Imagen imagen = (Imagen) value;
+				setText(imagen.getName());
 			}
 			return this;
 		}
