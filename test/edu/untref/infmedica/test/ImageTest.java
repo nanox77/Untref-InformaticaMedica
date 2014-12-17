@@ -22,7 +22,7 @@ public class ImageTest {
 	public void clearDB() throws Exception {
 
 		this.dao = new ImageDAO();
-		//this.dao.delete();
+		// this.dao.delete();
 		this.procesador = new ProcesadorDeImagenes();
 	}
 
@@ -37,12 +37,11 @@ public class ImageTest {
 
 	@Test
 	public void histogramaCambiaSiFiltro() throws IOException {
-
 		Imagen imagen = new Imagen(name, path);
 		int[] histograma1 = imagen.getHistogram();
 		procesador.cargarImagen(imagen);
 		procesador.findEdges();
 		int[] histograma2 = imagen.getHistogram();
-		Assert.assertNotEquals(histograma1, histograma2);
+		Assert.assertNotSame(histograma1, histograma2);
 	}
 }
