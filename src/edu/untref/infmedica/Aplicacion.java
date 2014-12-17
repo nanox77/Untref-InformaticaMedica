@@ -1,10 +1,12 @@
 package edu.untref.infmedica;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -157,11 +159,28 @@ public class Aplicacion {
 
 		PacienteDAO dao = new PacienteDAO();
 		List<Paciente> pacientes = dao.getAll();
-		pacientes.add(new Paciente(1, "hola", "hola"));
 		DefaultListModel<Paciente> model = new DefaultListModel<Paciente>();
+		listPacientes.setModel(model);
+		listPacientes.setCellRenderer(new listCellRenderer());
 		for (Paciente paciente : pacientes) {
 			model.addElement(paciente);
 		}
-		listPacientes.setModel(model);
+	}
+
+	@SuppressWarnings("serial")
+	public class listCellRenderer extends DefaultListCellRenderer {
+
+		public Component getListCellRendererComponent(JList<?> list,
+				Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+
+			super.getListCellRendererComponent(list, value, index, isSelected,
+					cellHasFocus);
+			if (value instanceof Paciente) {
+				Paciente paciente = (Paciente) value;
+				setText(paciente.getApellido() + ", " + paciente.getNombre());
+			}
+			return this;
+		}
 	}
 }

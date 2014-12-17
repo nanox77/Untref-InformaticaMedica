@@ -3,14 +3,17 @@ package edu.untref.infmedica;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBSetup {
 
 	public static void main(String[] args) {
 
 		DBSetup.createDatabase();
-		createTableImages();
-		createTablePacientes();
+		DBSetup.createTableImages();
+		DBSetup.createTablePacientes();
+		DBSetup.populateTablePacientes();
 	}
 
 	private static void createDatabase() {
@@ -57,6 +60,22 @@ public class DBSetup {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	public static void populateTablePacientes() {
+
+		List<Paciente> pacientes = new ArrayList<Paciente>();
+		Paciente paciente1 = new Paciente(0, "Arispe", "Guillermo");
+		Paciente paciente2 = new Paciente(1, "Castellano", "Mariano");
+		Paciente paciente3 = new Paciente(2, "Rodríguez", "Martín");
+		pacientes.add(paciente1);
+		pacientes.add(paciente2);
+		pacientes.add(paciente3);
+		PacienteDAO dao = new PacienteDAO();
+		for (Paciente paciente : pacientes) {
+			dao.save(paciente);
+			System.out.println("Added paciente " + paciente.getId());
 		}
 	}
 }

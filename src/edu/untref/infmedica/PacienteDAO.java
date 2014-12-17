@@ -28,4 +28,21 @@ public class PacienteDAO {
 		ps.close();
 		return pacientes;
 	}
+
+	public void save(Paciente paciente) {
+
+		Connection connection = ConnectDB.getInstance().connectInfoMedicaDB();
+		try {
+			String query = "INSERT INTO pacientes VALUES (?, ?, ?, ?)";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, paciente.getId());
+			ps.setString(2, paciente.getApellido());
+			ps.setString(3, paciente.getNombre());
+			ps.setString(4, paciente.getHistoria());
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
