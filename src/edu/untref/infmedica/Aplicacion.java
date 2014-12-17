@@ -267,7 +267,6 @@ public class Aplicacion implements ActionListener {
 				this.procesador.gamma(0.25);
 				break;
 			}
-			//this.procesador.mostrarImagen(imagen.getName());
 			break;
 		}
 	}
