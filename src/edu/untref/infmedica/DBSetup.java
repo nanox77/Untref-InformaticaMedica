@@ -28,7 +28,7 @@ public class DBSetup {
 		Imagen imagen5 = new Imagen("hombro", "resources/hombro.jpg");
 		Imagen imagen6 = new Imagen("mano", "resources/mano.jpg");
 		Imagen imagen7 = new Imagen("r1", "resources/r1.jpg");
-		Imagen imagen8 = new Imagen("r1", "resources/r2.jpg");
+		Imagen imagen8 = new Imagen("r2", "resources/r2.jpg");
 		Imagen imagen9 = new Imagen("torax", "resources/torax.jpg");
 
 		imagen1.setPaciente(0);
