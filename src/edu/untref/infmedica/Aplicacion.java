@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
@@ -19,12 +21,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class Aplicacion {
+public class Aplicacion implements ActionListener {
 
 	private JFrame ventana;
 	private JPanel contentPane;
 	private JList<Paciente> listPacientes;
 	private JList<Imagen> listImagenes;
+	private JButton btnMostrarImagen;
+	private ProcesadorDeImagenes procesador;
 
 	public static void main(String[] args) throws Exception {
 
@@ -33,6 +37,7 @@ public class Aplicacion {
 
 	public Aplicacion() throws Exception {
 
+		procesador = new ProcesadorDeImagenes();
 		crearVentana();
 	}
 
@@ -51,6 +56,8 @@ public class Aplicacion {
 
 	private void configurarAcciones() {
 
+		this.btnMostrarImagen.addActionListener(this);
+		btnMostrarImagen.setActionCommand("MOSTRAR_IMAGEN");
 		this.listImagenes
 		.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.listPacientes
@@ -161,13 +168,13 @@ public class Aplicacion {
 		gbc_textArea.gridx = 1;
 		gbc_textArea.gridy = 5;
 		this.contentPane.add(textArea, gbc_textArea);
-		JButton btnNewButton = new JButton("Mostrar imagen");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.fill = GridBagConstraints.BOTH;
-		gbc_btnNewButton.insets = new Insets(5, 5, 5, 5);
-		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 7;
-		this.contentPane.add(btnNewButton, gbc_btnNewButton);
+		btnMostrarImagen = new JButton("Mostrar imagen");
+		GridBagConstraints gbc_btnMostrarImagen = new GridBagConstraints();
+		gbc_btnMostrarImagen.fill = GridBagConstraints.BOTH;
+		gbc_btnMostrarImagen.insets = new Insets(5, 5, 5, 5);
+		gbc_btnMostrarImagen.gridx = 3;
+		gbc_btnMostrarImagen.gridy = 7;
+		this.contentPane.add(btnMostrarImagen, gbc_btnMostrarImagen);
 		JComboBox comboBox = new JComboBox();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.fill = GridBagConstraints.BOTH;
@@ -229,5 +236,18 @@ public class Aplicacion {
 			}
 			return this;
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		String name = e.getActionCommand();
+		switch (name) {
+		case "MOSTRAR_IMAGEN":
+			Imagen imagen = listImagenes.getSelectedValue();
+			procesador.cargarImagen(imagen);
+			procesador.mostrarImagen(imagen.getName());
+			break;
+		}		
 	}
 }
