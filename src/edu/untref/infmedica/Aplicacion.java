@@ -366,55 +366,55 @@ public class Aplicacion implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		Imagen imagen;
-		String name = e.getActionCommand();
-		switch (name) {
-		case "MOSTRAR_IMAGEN":
-			imagen = this.listImagenes.getSelectedValue();
-			this.procesador.cargarImagen(imagen);
-			this.procesador.mostrarImagen(imagen.getName());
-			break;
-		case "FILTRO":
-			imagen = this.listImagenes.getSelectedValue();
-			this.procesador.cargarImagen(imagen);
-			switch ((String) this.comboBox.getSelectedItem()) {
-			case "FindEdges":
-				this.procesador.findEdges();
+		if (!this.listImagenes.isSelectionEmpty()) {
+			Imagen imagen;
+			String name = e.getActionCommand();
+			switch (name) {
+			case "MOSTRAR_IMAGEN":
+				imagen = this.listImagenes.getSelectedValue();
+				this.procesador.cargarImagen(imagen);
+				this.procesador.mostrarImagen(imagen.getName());
 				break;
-			case "Blur":
-				this.procesador.blur(10);
-				break;
-			case "Gamma":
-				this.procesador.gamma(0.25);
-				break;
-			}
-			actualizarLabelDistancia();
-			break;
-		case "HISTOGRAMA":
-			imagen = this.listImagenes.getSelectedValue();
-			HistogramWindow histograma = new HistogramWindow(new ImagePlus(
-					"Histograma", imagen.getImage()));
-			histograma.setTitle("Histograma de " + imagen.getName());
-			histograma.setVisible(true);
-			break;
-		case "CONSULTAS":
-			try {
-				if (!this.listImagenes.isSelectionEmpty()) {
-					Consultas consultas = new Consultas(this);
-				} else {
-					JOptionPane.showMessageDialog(null,
-							"Debe seleccionar una imágen de la lista.",
-							"Imagen no seleccionada", JOptionPane.WARNING_MESSAGE);
+			case "FILTRO":
+				imagen = this.listImagenes.getSelectedValue();
+				this.procesador.cargarImagen(imagen);
+				switch ((String) this.comboBox.getSelectedItem()) {
+				case "FindEdges":
+					this.procesador.findEdges();
+					break;
+				case "Blur":
+					this.procesador.blur(10);
+					break;
+				case "Gamma":
+					this.procesador.gamma(0.25);
+					break;
 				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
+				actualizarLabelDistancia();
+				break;
+			case "HISTOGRAMA":
+				imagen = this.listImagenes.getSelectedValue();
+				HistogramWindow histograma = new HistogramWindow(new ImagePlus(
+						"Histograma", imagen.getImage()));
+				histograma.setTitle("Histograma de " + imagen.getName());
+				histograma.setVisible(true);
+				break;
+			case "CONSULTAS":
+				try {
+					Consultas consultas = new Consultas(this);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				break;
+			case "COMPARAR":
+				this.histogramaComparacion = this.listImagenes
+						.getSelectedValue().getHistogram();
+				actualizarLabelDistancia();
+				break;
 			}
-			break;
-		case "COMPARAR":
-			this.histogramaComparacion = this.listImagenes.getSelectedValue()
-					.getHistogram();
-			actualizarLabelDistancia();
-			break;
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"Debe seleccionar una imágen de la lista.",
+					"Imagen no seleccionada", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
