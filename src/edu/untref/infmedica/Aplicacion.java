@@ -302,6 +302,24 @@ public class Aplicacion implements ActionListener {
 		}
 	}
 
+	public void buscar(double distancia, int txm, int tym, int txl, int tyl)
+			throws Exception {
+
+		Imagen imagenActual = this.listImagenes.getSelectedValue();
+		ImageDAO dao = new ImageDAO();
+		List<Imagen> imagenes = dao.getAll();
+		DefaultListModel<Imagen> model = new DefaultListModel<Imagen>();
+		this.listImagenes.setModel(model);
+		this.listImagenes.setCellRenderer(new listCellRenderer());
+		for (Imagen imagen : imagenes) {
+			if (Comparator.distanciaEuclidea(imagen.getHistogram(),
+					imagenActual.getHistogram()) <= distancia) {
+				
+				model.addElement(imagen);
+			}
+		}
+	}
+
 	@SuppressWarnings("serial")
 	public class listCellRenderer extends DefaultListCellRenderer {
 
@@ -362,7 +380,7 @@ public class Aplicacion implements ActionListener {
 				this.procesador.gamma(0.25);
 				break;
 			}
-			this.actualizarLabelDistancia();
+			actualizarLabelDistancia();
 			break;
 		case "HISTOGRAMA":
 			imagen = this.listImagenes.getSelectedValue();
@@ -373,7 +391,7 @@ public class Aplicacion implements ActionListener {
 			break;
 		case "CONSULTAS":
 			try {
-				Consultas consultas = new Consultas();
+				Consultas consultas = new Consultas(this);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -381,7 +399,7 @@ public class Aplicacion implements ActionListener {
 		case "COMPARAR":
 			this.histogramaComparacion = this.listImagenes.getSelectedValue()
 					.getHistogram();
-			this.actualizarLabelDistancia();
+			actualizarLabelDistancia();
 			break;
 		}
 	}
