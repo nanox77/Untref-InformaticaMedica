@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
@@ -312,9 +313,16 @@ public class Aplicacion implements ActionListener {
 		this.listImagenes.setModel(model);
 		this.listImagenes.setCellRenderer(new listCellRenderer());
 		for (Imagen imagen : imagenes) {
-			if (Comparator.distanciaEuclidea(imagen.getHistogram(),
-					imagenActual.getHistogram()) <= distancia) {
-				
+			boolean distanciaMenor = distancia == 0
+					|| Comparator.distanciaEuclidea(imagen.getHistogram(),
+							imagenActual.getHistogram()) <= distancia;
+			boolean tmayor = txm == 0 && tym == 0
+					|| imagen.getImage().getWidth(null) > txm
+					&& imagen.getImage().getHeight(null) > tym;
+			boolean tmenor = txl == 0 && tyl == 0
+					|| imagen.getImage().getWidth(null) < txl
+					&& imagen.getImage().getHeight(null) < tyl;
+			if (distanciaMenor && tmayor && tmenor) {
 				model.addElement(imagen);
 			}
 		}
@@ -391,7 +399,13 @@ public class Aplicacion implements ActionListener {
 			break;
 		case "CONSULTAS":
 			try {
-				Consultas consultas = new Consultas(this);
+				if (!this.listImagenes.isSelectionEmpty()) {
+					Consultas consultas = new Consultas(this);
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Debe seleccionar una imágen de la lista.",
+							"Imagen no seleccionada", JOptionPane.WARNING_MESSAGE);
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
